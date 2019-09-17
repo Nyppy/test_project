@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp',
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +53,37 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+JWT_AUTH = {
+
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PREMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated'
+    ),
+
+}
+
+# если вдруг не рабтатет аутентификация через токен от Djoser
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': ( 'rest_framework.authentication.TokenAuthentication',),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'myapp.permissions.AllowOptionsAuthentication',
+#     )
+# }
+
 
 ROOT_URLCONF = 'myprojectone.urls'
 
@@ -71,6 +105,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myprojectone.wsgi.application'
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:4200',
+)
+CORS_ORIGIN_REGEX_WHITELIST = (
+    'http://localhost:4200',
+)
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -115,9 +157,5 @@ USE_L10N = True
 
 USE_TZ = True
 
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100
-}
 
 STATIC_URL = '/static/'

@@ -5,8 +5,13 @@ from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic import View
-from rest_framework import viewsets
-from .serializers import UserSerializer, PostSerializer
+from rest_framework import viewsets, generics
+from .serializers import PostSerializer
+from .permissions import IsOWnOrReadOnly
+# примесь для проверки пользователя
+from rest_framework.permissions import IsAuthenticated
+# примесь для проверки администратора
+from rest_framework.permissions import IsAdminUser
 
 from .forms import UserForm, UserRead, UserReadPass, Form_new_posts, Form_serach_posts, PostCategories
 from .models import Post, Categories
@@ -237,11 +242,12 @@ class GetCategoriesOne(View):
 
 
 # class API
-class UserViewsSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class PostCreate(generics.CreateAPIView):
+    serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated, )
 
 
-class PostViewsSet(viewsets.ModelViewSet):
+class PostAll(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated,)

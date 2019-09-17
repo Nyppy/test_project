@@ -1,12 +1,6 @@
 from django.urls import path, include
 from . import views
-from rest_framework import routers
 
-
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewsSet)
-router.register(r'post', views.PostViewsSet)
-# router.register(r'add_post', views.PostAddViewsSet)
 
 urlpatterns = [
     path('', views.Index.as_view(), name='index'),
@@ -20,6 +14,24 @@ urlpatterns = [
     path('search_post/<str:search>/', views.SearchPost.as_view(), name='search_post'),
     path('categories/', views.GetCategories.as_view(), name='categories'),
     path('categories_one/<int:pk>/', views.GetCategoriesOne.as_view(), name='categories_one'),
-    path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    # создание поста
+    path('api/post_create/', views.PostCreate().as_view()),
+    # вывод всех постов
+    path('api/post_all/', views.PostAll().as_view()),
+    path('api/auth/', include('djoser.urls')),
+    path('api/auth_token/', include('djoser.urls.authtoken')),
 ]
+
+'''
+Регистрация происходит путем отправки JSON {"email": "","username": "","password": ""}
+по адресу http://127.0.0.1:8000/api/auth/users/
+в ответ ничего не отсылается
+
+Вход происходит путем отправки JSON {"username": "","password": ""}
+по адресу http://127.0.0.1:8000/api/auth_token/token/login/
+в ответете отсылается веб-токен
+
+Выход происходит путем отправки вет токена в headers по адресу 
+http://127.0.0.1:8000/api/auth_token/token/logout/
+'''
