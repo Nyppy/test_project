@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-
+from djoser import views as djViwe
 
 urlpatterns = [
     path('', views.Index.as_view(), name='index'),
@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/post_all/', views.PostAll().as_view()),
     path('api/auth/', include('djoser.urls')),
     path('api/auth_token/', include('djoser.urls.authtoken')),
+    path('api/qwer/', djViwe.TokenDestroyView.as_view()),
 ]
 
 '''

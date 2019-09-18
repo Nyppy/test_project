@@ -57,32 +57,28 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-JWT_AUTH = {
-
-    'JWT_VERIFY': True,
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-
-}
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PREMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated'
-    ),
-
+    )
 }
 
-# если вдруг не рабтатет аутентификация через токен от Djoser
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': ( 'rest_framework.authentication.TokenAuthentication',),
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'myapp.permissions.AllowOptionsAuthentication',
-#     )
-# }
+#если вдруг не рабтатет аутентификация через токен от Djoser
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        # показывает веб интерфес в браузере
+        # 'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'myapp.permissions.AllowOptionsAuthentication',
+    # )
+}
 
 
 ROOT_URLCONF = 'myprojectone.urls'

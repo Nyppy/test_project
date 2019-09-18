@@ -12,6 +12,7 @@ from .permissions import IsOWnOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 # примесь для проверки администратора
 from rest_framework.permissions import IsAdminUser
+from rest_framework.authentication import TokenAuthentication
 
 from .forms import UserForm, UserRead, UserReadPass, Form_new_posts, Form_serach_posts, PostCategories
 from .models import Post, Categories
@@ -250,4 +251,7 @@ class PostCreate(generics.CreateAPIView):
 class PostAll(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    # доступ только через токены, но еще можно указать доступные способы аутентификации для всего проекта
+    # в settings.py в DEFAULT_AUTHENTICATION_CLASSES
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
